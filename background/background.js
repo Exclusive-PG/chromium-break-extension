@@ -1,13 +1,24 @@
+const METHODS = {
+    pomodoro: { work: 25 * 60, breakTime: 5 * 60 },
+    '20-20-20': { work: 20 * 60, breakTime: 20 },
+    '45-15': { work: 45 * 60, breakTime: 15 * 60 },
+    '60-10': { work: 60 * 60, breakTime: 10 * 60 },
+};
+
 let startTime = null;
-let duration = 5;
+let duration = METHODS[0];
 let isRunning = false;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'start') {
-        startTime = Date.now();
-        isRunning = true;
-        chrome.alarms.create('workEnd', { delayInMinutes: duration / 60 });
-        sendResponse({ ok: true });
+        chrome.storage.sync.get('method', data => {
+            const method = METHODS[data.method] || METHODS['pomodoro'];
+            duration = method.work;
+            startTime = Date.now();
+            isRunning = true;
+            chrome.alarms.create('workEnd', { delayInMinutes: duration / 60 });
+            sendResponse({ ok: true });
+        });
     }
 
     if (message.action === 'stop') {
@@ -30,6 +41,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'breakDone') {
         isRunning = false;
         startTime = null;
+        sendResponse({ ok: true });
+    }
+    if (message.action === 'setMethod') {
+        const method = METHODS[message.method] || METHODS['pomodoro'];
+        duration = method.work;
         sendResponse({ ok: true });
     }
     return true;

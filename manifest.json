@@ -3,8 +3,15 @@
     "name": "BreakCat",
     "version": "0.1.0",
     "description": "Take healthy breaks with your cat companion!",
+    "icons": {
+        "16":  "assets/icons/icon16.png",
+        "32":  "assets/icons/icon32.png",
+        "48":  "assets/icons/icon48.png",
+        "128": "assets/icons/icon128.png"
+    },
     "action": {
         "default_popup": "popup/popup.html",
+        "default_icon":  "assets/icons/icon128.png",
         "default_title": "BreakCat"
     },
     "background": {

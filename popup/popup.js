@@ -2,6 +2,7 @@ const timerEl = document.getElementById('timer');
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
 const phaseLabel = document.getElementById('phaseLabel');
+const methodBtns = document.querySelectorAll('.method-btn');
 
 function formatTime(seconds) {
     const m = Math.floor(seconds / 60);
@@ -36,6 +37,19 @@ startBtn.addEventListener('click', () => {
 stopBtn.addEventListener('click', () => {
     chrome.runtime.sendMessage({ action: 'stop' }, () => {
         phaseLabel.textContent = 'STOP';
+    });
+});
+
+methodBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (!btn.classList.contains('active')) {
+            methodBtns.forEach(b => {
+                b.classList.remove('active');
+            });
+            btn.classList.add('active');
+            chrome.storage.sync.set({ method: btn.dataset.method });
+            chrome.runtime.sendMessage({ action: 'setMethod', method: btn.dataset.method });
+        }
     });
 });
 setInterval(updateDisplay, 1000);
