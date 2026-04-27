@@ -1,5 +1,5 @@
 let startTime = null;
-let duration = 25 * 60;
+let duration = 5;
 let isRunning = false;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
